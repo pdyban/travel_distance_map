@@ -1,26 +1,26 @@
-,latitude,longitude,min travel time
-0,52.502793,13.473981,904.584445
-1,52.502793,13.4673625,636.986839
-2,52.502793,13.460744,859.758908
-3,52.502793,13.4541255,846.968438
-4,52.502793,13.447507,499.271294
-5,52.508708,13.473981,1179.492022
-6,52.508708,13.4673625,807.374833
-7,52.508708,13.460744,813.429644
-8,52.508708,13.4541255,976.752917
-9,52.508708,13.447507,859.53577
-10,52.514623,13.473981,711.732154
-11,52.514623,13.4673625,583.729988
-12,52.514623,13.460744,881.390286
-13,52.514623,13.4541255,513.487801
-14,52.514623,13.447507,715.554423
-15,52.520537999999995,13.473981,795.118537
-16,52.520537999999995,13.4673625,780.679959
-17,52.520537999999995,13.460744,697.245469
-18,52.520537999999995,13.4541255,680.335126
-19,52.520537999999995,13.447507,903.64535
-20,52.526453,13.473981,1301.403785
-21,52.526453,13.4673625,1101.027557
-22,52.526453,13.460744,885.852161
-23,52.526453,13.4541255,1002.722766
-24,52.526453,13.447507,589.965002
+,latitude,longitude,min travel time,shortest trip
+0,52.502793,13.473981,844.584445,Marktstr. (Berlin) > S Rummelsburg (Berlin) > S Ostkreuz Bhf (Berlin) > S+U Alexanderplatz Bhf (Berlin)
+1,52.502793,13.4673625,456.986839,S Ostkreuz Bhf (Berlin) > S+U Alexanderplatz Bhf (Berlin)
+2,52.502793,13.460744,859.758908,Modersohnstr. (Berlin) > S+U Warschauer Str. (Berlin) > S+U Alexanderplatz Bhf (Berlin)
+3,52.502793,13.4541255,846.968438,Osthafen (Berlin) > S+U Warschauer Str. (Berlin) > S+U Alexanderplatz Bhf (Berlin)
+4,52.502793,13.447507,1039.271294,Oberbaumbrücke (Berlin) > S+U Warschauer Str. (Berlin) > S+U Alexanderplatz Bhf (Berlin)
+5,52.508708,13.473981,1119.492022,Neue Bahnhofstr. (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+6,52.508708,13.4673625,747.374833,Boxhagener Str./Holteistr. (Berlin) > S+U Frankfurter Allee (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+7,52.508708,13.460744,753.429644,Wühlischstr./Gärtnerstr. (Berlin) > S+U Frankfurter Allee (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+8,52.508708,13.4541255,916.752917,Libauer Str. (Berlin) > Grünberger Str./Warschauer Str. (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+9,52.508708,13.447507,859.53577,Helsingforser Platz (Berlin) > S Warschauer Str. (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+10,52.514623,13.473981,651.732154,S+U Frankfurter Allee (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+11,52.514623,13.4673625,583.729988,U Samariterstr. (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+12,52.514623,13.460744,821.390286,Niederbarnimstr. (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+13,52.514623,13.4541255,453.487801,U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+14,52.514623,13.447507,775.554423,Wedekindstr. (Berlin) > Grünberger Str./Warschauer Str. (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+15,52.520537999999995,13.473981,735.118537,Scheffelstr./Paul-Junius-Str. (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+16,52.520537999999995,13.4673625,720.679959,James-Hobrecht-Str. (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+17,52.520537999999995,13.460744,637.245469,Forckenbeckplatz (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+18,52.520537999999995,13.4541255,620.335126,Bersarinplatz (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+19,52.520537999999995,13.447507,843.64535,Straßmannstr. (Berlin) > U Frankfurter Tor (Berlin) > S+U Alexanderplatz (Berlin) [U5]
+20,52.526453,13.473981,1301.403785,Roederplatz. (Berlin) > S Landsberger Allee (Berlin) > U Alexanderplatz (Berlin) [Tram]
+21,52.526453,13.4673625,1101.027557,Anton-Saefkow-Platz (Berlin) > S Landsberger Allee (Berlin) > U Alexanderplatz (Berlin) [Tram]
+22,52.526453,13.460744,inf,No trip found
+23,52.526453,13.4541255,1002.722766,S Landsberger Allee (Berlin) > U Alexanderplatz (Berlin) [Tram]
+24,52.526453,13.447507,589.965002,Landsberger Allee/Petersburger Str. (Berlin) > U Alexanderplatz (Berlin) [Tram]
