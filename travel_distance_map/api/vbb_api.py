@@ -8,10 +8,9 @@ import requests
 import json
 
 class VBBAPI(API):
-    def __init__(self):
+    def __init__(self, access_id):
         API.__init__(self)
-        with open('ACCESS_ID.txt') as f:
-            self.ACCESS_ID = f.read().strip()
+        self.ACCESS_ID = access_id
         self.base_url = "https://demo.hafas.de/openapi/vbb-proxy/"
 
     def request(self, query):
@@ -137,8 +136,8 @@ class VBBAPI(API):
 
 
 class VBBAPICached(VBBAPI):
-    def __init__(self):
-        VBBAPI.__init__(self)
+    def __init__(self, access_id):
+        VBBAPI.__init__(self, access_id)
         self.cache = SQLiteCache('cache.sqlite', keys=['foo1',])
 
     def request(self, query):

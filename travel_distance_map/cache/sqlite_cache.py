@@ -5,39 +5,44 @@ import sqlite3
 from .cache import Cache
 
 class SQLiteCache(Cache):
-    def __init__(self, path, keys):
+    def __init__(self, path):
         self.path = path
         self.conn = sqlite3.connect(self.path)
         c = self.conn.cursor()
         c.execute('''SELECT COUNT(name) FROM sqlite_master WHERE
                 type ='table' AND name LIKE 'data';''')
         res = c.fetchone()
-        self.keys = keys
+        self.keys = set()
         if not res[0]:
-            c.execute('CREATE TABLE data({}, query text, response text)'.format(', '.join('{} text'.format(key) for key in self.keys)))
+            c.execute('CREATE TABLE data(query text, response text)')
         self.conn.commit()
 
     def __contains__(self, query):
-        # t = query.values
-        if set(query.keys()) != set(self.keys):
-            print(query.keys(), self.keys)
-            raise KeyError('Query structure is different from cache')
+        if not set(query.keys()) <= self.keys:
+            return False
         c = self.conn.cursor()
-        c.execute('SELECT * FROM data WHERE {}'.format(' AND '.join('{} = \"{}\"'.format(key, query[key]) for key in self.keys)))
+        c.execute('SELECT * FROM data WHERE {}'.format(' AND '.join('{} = \"{}\"'.format(key, query[key]) for key in query.keys())))
         return c.fetchone()
 
     def __setitem__(self, query, response):
-        if query in self:
+        if not set(query.keys()) <= self.keys:
+            # append new columns
+            c = self.conn.cursor()
+            for key in set(query.keys()) - self.keys:
+                c.execute('ALTER TABLE data ADD {}'.format(key))
+            self.conn.commit()
+            self.keys.update(query.keys())
+        elif query in self:
             raise KeyError("Cannot overwrite existing keys")
         c = self.conn.cursor()
-        c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(self.keys + ['query', 'response']), ','.join(['\"{}\"'.format(query[key]) for key in self.keys] + ['\"{}\"'.format(str(query)), '\"{}\"'.format(response)])))
+        c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(list(query.keys()) + ['query', 'response']), ','.join(['\"{}\"'.format(query[key]) for key in query.keys()] + ['\"{}\"'.format(str(query)), '\"{}\"'.format(response)])))
         self.conn.commit()
 
     def __getitem__(self, query):
         if not query in self:
             raise KeyError('Query has not been cached')
         c = self.conn.cursor()
-        c.execute('SELECT response FROM data WHERE {}'.format(' AND '.join('{} = \"{}\"'.format(key, query[key]) for key in self.keys)))
+        c.execute('SELECT response FROM data WHERE {}'.format(' AND '.join('{} = \"{}\"'.format(key, query[key]) for key in query.keys())))
         return c.fetchone()[0]
 
     def __del__(self):

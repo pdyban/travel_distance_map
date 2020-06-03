@@ -9,7 +9,7 @@ class TestSQLiteCache(unittest.TestCase):
     def setUp(self):
         self.query = Query('https://api.pavlo.com', {'key1': 'value1', 'key2': 'value2'})
         self.response = 'result'
-        self.cache = SQLiteCache(TEST_DB_FILE, list(self.query.keys()))
+        self.cache = SQLiteCache(TEST_DB_FILE)
 
     def tearDown(self):
         os.remove(TEST_DB_FILE)
