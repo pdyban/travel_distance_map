@@ -20,6 +20,7 @@ class SQLiteCache(Cache):
     def __contains__(self, query):
         # t = query.values
         if set(query.keys()) != set(self.keys):
+            print(query.keys(), self.keys)
             raise KeyError('Query structure is different from cache')
         c = self.conn.cursor()
         c.execute('SELECT * FROM data WHERE {}'.format(' AND '.join('{} = \"{}\"'.format(key, query[key]) for key in self.keys)))

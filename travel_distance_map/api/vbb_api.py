@@ -4,6 +4,8 @@ VBB API implementation.
 
 from .api import API
 from ..cache import SQLiteCache
+import requests
+import json
 
 class VBBAPI(API):
     def __init__(self):
@@ -137,7 +139,7 @@ class VBBAPI(API):
 class VBBAPICached(VBBAPI):
     def __init__(self):
         VBBAPI.__init__(self)
-        self.cache = SQLiteCache('cache.sqlite')
+        self.cache = SQLiteCache('cache.sqlite', keys=['query',])
 
     def request(self, query):
         if query in self.cache:

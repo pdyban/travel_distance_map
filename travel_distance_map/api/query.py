@@ -10,4 +10,4 @@ class Query(dict):
     def __str__(self):
         if not self.keys:
             return rootUrl
-        return '{}?' + '&'.join('{}={}'.format(key, value) for (key, value) in self.items())
+        return '{}?'.format(self.rootUrl) + '&'.join('{}={}'.format(key, value) for (key, value) in self.items())
