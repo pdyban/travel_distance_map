@@ -14,7 +14,7 @@ class SQLiteCache(Cache):
         res = c.fetchone()
         self.keys = keys
         if not res[0]:
-            c.execute('CREATE TABLE data({}, response text)'.format(', '.join('{} text'.format(key) for key in self.keys)))
+            c.execute('CREATE TABLE data({}, query text, response text)'.format(', '.join('{} text'.format(key) for key in self.keys)))
         self.conn.commit()
 
     def __contains__(self, query):
@@ -30,7 +30,7 @@ class SQLiteCache(Cache):
         if query in self:
             raise KeyError("Cannot overwrite existing keys")
         c = self.conn.cursor()
-        c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(self.keys + ['response']), ','.join(['\"{}\"'.format(query[key]) for key in self.keys] + ['\"{}\"'.format(response)])))
+        c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(self.keys + ['query', 'response']), ','.join(['\"{}\"'.format(query[key]) for key in self.keys] + ['\"{}\"'.format(str(query)), '\"{}\"'.format(response)])))
         self.conn.commit()
 
     def __getitem__(self, query):
