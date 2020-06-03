@@ -30,8 +30,8 @@ class SQLiteCache(Cache):
             c = self.conn.cursor()
             for key in set(query.keys()) - self.keys:
                 c.execute('ALTER TABLE data ADD {}'.format(key))
+                self.keys.add(key)
             self.conn.commit()
-            self.keys.update(query.keys())
         elif query in self:
             raise KeyError("Cannot overwrite existing keys")
         c = self.conn.cursor()

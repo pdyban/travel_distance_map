@@ -136,15 +136,17 @@ class VBBAPI(API):
 
 
 class VBBAPICached(VBBAPI):
-    def __init__(self, access_id):
+    def __init__(self, access_id, cache=None):
         VBBAPI.__init__(self, access_id)
-        self.cache = SQLiteCache('cache.sqlite', keys=['foo1',])
+        if cache is not None:
+            self.cache = cache
+        else:
+            self.cache = SQLiteCache('cache.sqlite')
 
     def request(self, query):
         if query in self.cache:
             return self.cache[query]
 
         response = VBBAPI.request(self, query)
-        print(response)
         self.cache[query] = response
         return response
