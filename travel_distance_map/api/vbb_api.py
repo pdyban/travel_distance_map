@@ -3,6 +3,7 @@ VBB API implementation.
 """
 
 from .api import API
+from .query import Query
 from ..cache import SQLiteCache
 import requests
 import json
@@ -21,11 +22,17 @@ class VBBAPI(API):
         return js
 
     def get_closest_stop(self, point):
+        parameters = {}
         endpoint = self.base_url + 'location.nearbystops'
-        endpoint = self.append_access_id(endpoint)
-        endpoint = self.force_json_format(endpoint)
-        endpoint += '&originCoordLong={}&originCoordLat={}&maxNo=1&r=2000'.format(point.lon,point.lat)
-        response = self.request(endpoint)
+
+        parameters['accessId'] = self.ACCESS_ID
+        parameters['format'] = 'json'
+        parameters['originCoordLong'] = point.lon
+        parameters['originCoordLat'] = point.lat
+        parameters['maxNo'] = 1
+        parameters['r'] = 2000
+        query = Query(self.base_url + 'location.nearbystops', parameters)
+        response = self.request(query)
 
         for key, result in response.items():
             if 'TechnicalMessage' in result:
