@@ -12,9 +12,14 @@ class SQLiteCache(Cache):
         c.execute('''SELECT COUNT(name) FROM sqlite_master WHERE
                 type ='table' AND name LIKE 'data';''')
         res = c.fetchone()
-        self.keys = set()
+
         if not res[0]:
             c.execute('CREATE TABLE data(query text, response text)')
+            self.keys = set()
+        else:
+            # reading existing Database
+            c.execute('PRAGMA table_info(data)')
+            self.keys = set([item[1] for item in c.fetchall() if item[1] not in ('query', 'response')])
         self.conn.commit()
 
     def __contains__(self, query):

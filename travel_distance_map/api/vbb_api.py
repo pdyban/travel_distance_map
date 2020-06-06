@@ -5,7 +5,7 @@ VBB API implementation.
 from .api import API
 from .query import Query
 from ..cache import SQLiteCache
-from ..primitives import APIError
+from ..primitives import APIError, Position
 import requests
 import json
 
@@ -41,7 +41,8 @@ class VBBAPI(API):
 
             for location in result:
                 try:
-                    return location['StopLocation']
+                    loc = location['StopLocation']
+                    return Position(loc['lat'], loc['lon'], loc['extId'], loc['name'])
                 except TypeError as e:
                     continue
 

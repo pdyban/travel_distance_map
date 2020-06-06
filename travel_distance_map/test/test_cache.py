@@ -25,6 +25,10 @@ class TestSQLiteCache(unittest.TestCase):
         self.cache[self.query] = self.response
         self.assertEqual(self.cache[self.query], self.response)
 
+    def test_can_load_existing_cache_from_file(self):
+        cache = SQLiteCache(TEST_DB_FILE)
+        self.assertEqual(cache.keys, self.cache.keys)
+
 
 if __name__ == '__main__':
     unittest.main()

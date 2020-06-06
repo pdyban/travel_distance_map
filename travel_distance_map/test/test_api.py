@@ -33,11 +33,19 @@ class TestVBBAPICached(unittest.TestCase):
     def test_get_closest_stop(self):
         location = GPSPoint(52.5219216,13.411026)  # Berlin, Alexanderplatz
         result = self.api.get_closest_stop(location)
-        self.assertEqual('S+U Alexanderplatz Bhf/Dircksenstr. (Berlin)', result['name'])
-        self.assertEqual('900100024', result['extId'])
+        self.assertEqual('S+U Alexanderplatz Bhf/Dircksenstr. (Berlin)', result.name)
+        self.assertEqual('900100024', result.id)
         # should now pull result from cache and the result should be in same format as the original
         result2 = self.api.get_closest_stop(location)
         self.assertEqual(result2, result)
+
+    def test_can_init_old_cache(self):
+        cache = SQLiteCache(TEST_DB_FILE)
+        with open('ACCESS_ID.txt') as f:
+            ACCESS_ID = f.read().strip()
+        api2 = VBBAPICached(access_id=ACCESS_ID, cache=cache)
+        result = api2.get_closest_stop(GPSPoint(52.5219216,13.411026))
+        self.assertEqual('900100024', result.id)
 
 
 if __name__ == '__main__':
