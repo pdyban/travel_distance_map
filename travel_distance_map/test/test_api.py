@@ -3,17 +3,17 @@ import os
 from travel_distance_map import VBBAPICached, Query, SQLiteCache
 from travel_distance_map import GPSPoint
 
-TEST_DB_FILE = 'travel_distance_map/test/test_vbbapicachedmock.sqlite'
+TEST_DB_FILE_MOCK = 'travel_distance_map/test/test_vbbapicachedmock.sqlite'
 TEST_DB_FILE = 'travel_distance_map/test/test_vbbapicached.sqlite'
 
 
 class TestVBBAPICachedMock(unittest.TestCase):
     def setUp(self):
-        cache = SQLiteCache(TEST_DB_FILE)
+        cache = SQLiteCache(TEST_DB_FILE_MOCK)
         self.api = VBBAPICached(access_id='', cache=cache)
 
     def tearDown(self):
-        os.remove(TEST_DB_FILE)
+        os.remove(TEST_DB_FILE_MOCK)
 
     def test_request(self):
         query = Query('https://postman-echo.com/get', {'foo1': 'bar1', 'foo2': 'bar2'})
