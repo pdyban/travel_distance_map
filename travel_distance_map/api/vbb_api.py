@@ -154,7 +154,7 @@ class VBBAPICached(VBBAPI):
     def request(self, query):
         if query in self.cache:
             js = self.cache[query]
-            print(js)
+            # print(js)
             return json.loads(js)
 
         response = VBBAPI.request(self, query)

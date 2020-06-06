@@ -21,8 +21,9 @@ class SQLiteCache(Cache):
         if not set(query.keys()) <= self.keys:
             return False
         c = self.conn.cursor()
-        c.execute('SELECT * FROM data WHERE {}'.format(' AND '.join('{} = \"{}\"'.format(key, query[key]) for key in query.keys())))
-        return c.fetchone()
+        c.execute('SELECT response FROM data WHERE query LIKE ?', [query.to_json(),])
+        res = c.fetchone()
+        return res
 
     def __setitem__(self, query, response):
         if not set(query.keys()) <= self.keys:
@@ -45,7 +46,7 @@ class SQLiteCache(Cache):
         if not query in self:
             raise KeyError('Query has not been cached')
         c = self.conn.cursor()
-        c.execute('SELECT response FROM data WHERE {}'.format(' AND '.join('{} = \"{}\"'.format(key, query[key]) for key in query.keys())))
+        c.execute('SELECT response FROM data WHERE query LIKE ?', [query.to_json(),])
         return c.fetchone()[0]
 
     def __del__(self):

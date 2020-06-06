@@ -12,7 +12,8 @@ class TestSQLiteCache(unittest.TestCase):
         self.cache = SQLiteCache(TEST_DB_FILE)
 
     def tearDown(self):
-        os.remove(TEST_DB_FILE)
+        # os.remove(TEST_DB_FILE)
+        pass
 
     def test_contains(self):
         self.assertFalse(self.query in self.cache)
