@@ -35,7 +35,10 @@ class SQLiteCache(Cache):
         elif query in self:
             raise KeyError("Cannot overwrite existing keys")
         c = self.conn.cursor()
-        c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(list(query.keys()) + ['query', 'response']), ','.join(['\"{}\"'.format(query[key]) for key in query.keys()] + ['\"{}\"'.format(str(query)), '\"{}\"'.format(response)])))
+        # c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(list(query.keys()) + ['query', 'response']), ','.join(['\"{}\"'.format(query[key]) for key in query.keys()] + ['\"{}\"'.format(str(query)), '\"{}\"'.format(response)])))
+        keys = list(query.keys()) + ['query', 'response']
+        values = [query[key] for key in query.keys()] + [query.to_json(), response]
+        c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(keys), ','.join('?' for i in range(len(query) + 2))), values)
         self.conn.commit()
 
     def __getitem__(self, query):

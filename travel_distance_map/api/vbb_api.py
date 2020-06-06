@@ -5,6 +5,7 @@ VBB API implementation.
 from .api import API
 from .query import Query
 from ..cache import SQLiteCache
+from ..primitives import APIError
 import requests
 import json
 
@@ -152,8 +153,10 @@ class VBBAPICached(VBBAPI):
 
     def request(self, query):
         if query in self.cache:
-            return self.cache[query]
+            js = self.cache[query]
+            print(js)
+            return json.loads(js)
 
         response = VBBAPI.request(self, query)
-        self.cache[query] = response
+        self.cache[query] = json.dumps(response)
         return response

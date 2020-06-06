@@ -30,11 +30,14 @@ class TestVBBAPICached(unittest.TestCase):
     def tearDown(self):
         os.remove(TEST_DB_FILE)
 
-    def test_request(self):
+    def test_get_closest_stop(self):
         location = GPSPoint(52.5219216,13.411026)  # Berlin, Alexanderplatz
         result = self.api.get_closest_stop(location)
         self.assertEqual('S+U Alexanderplatz Bhf/Dircksenstr. (Berlin)', result['name'])
         self.assertEqual('900100024', result['extId'])
+        # should now pull result from cache and the result should be in same format as the original
+        result2 = self.api.get_closest_stop(location)
+        self.assertEqual(result2, result)
 
 
 if __name__ == '__main__':
