@@ -8,6 +8,7 @@ from ..cache import SQLiteCache
 from ..primitives import APIError, Position
 import requests
 import json
+from datetime import datetime, timedelta
 
 class VBBAPI(API):
     def __init__(self, access_id):
@@ -23,16 +24,17 @@ class VBBAPI(API):
         return js
 
     def get_closest_stop(self, point):
-        parameters = {}
+        if isinstance(point, Position):
+            point = point.point  # extract GPSPoint from Position
         endpoint = self.base_url + 'location.nearbystops'
-
+        parameters = {}
         parameters['accessId'] = self.ACCESS_ID
         parameters['format'] = 'json'
         parameters['originCoordLong'] = point.lon
         parameters['originCoordLat'] = point.lat
         parameters['maxNo'] = 1
         parameters['r'] = 2000
-        query = Query(self.base_url + 'location.nearbystops', parameters)
+        query = Query(endpoint, parameters)
         response = self.request(query)
 
         for key, result in response.items():
@@ -48,20 +50,31 @@ class VBBAPI(API):
 
         return None
 
-    def get_all_trips(self, gps_point_start, gps_point_end, datetime_=None):
-        origin_extid, dest_extid = gps_point_start.identifier, gps_point_end.identifier
+    def get_all_trips(self, position_start, position_end, datetime_=None):
+        origin_extid, dest_extid = position_start.id, position_end.id
         endpoint = self.base_url + 'trip'
-        endpoint = self.append_access_id(endpoint)
-        endpoint = self.force_json_format(endpoint)
-        endpoint = self.set_origin_extid(endpoint, origin_extid)
-        endpoint = self.set_dest_extid(endpoint, dest_extid)
-        endpoint = self.enable_walk_routes(endpoint)
-        endpoint = self.enable_bike_routes(endpoint)
+        parameters = {}
+        parameters['accessId'] = self.ACCESS_ID
+        parameters['format'] = 'json'
+        parameters['originExtId'] = position_start.id
+        parameters['destExtId'] = position_end.id
+        parameters['totalWalk'] = '1,0,5000'
+        parameters['originWalk'] = '1,0,5000'
+        parameters['destWalk'] = '1,0,5000'
+        parameters['totalBike'] = '1,0,5000'
+        parameters['originBike'] = '1,0,5000'
+        parameters['destBike'] = '1,0,5000'
         if datetime_ is not None:
-            endpoint = self.append_date_and_time(endpoint, datetime_)
+            date_ = datetime_.strftime('%Y-%m-%d')
+            time_ = datetime_.strftime('%H:%M:%S')
+            duration = 20  # mins
+            parameters['date'] = date_
+            parameters['time'] = time_
+            parameters['duration'] = duration
+        query = Query(endpoint, parameters)
 
         try:
-            response = self.request(endpoint)
+            response = self.request(query)
         except APIError as e:
             response = {}
 
@@ -72,10 +85,10 @@ class VBBAPI(API):
     def extract_trips_from_response(self, response):
         trips = []
         try:
-            if response['errorCode'] == 'SVC_NO_RESULT':
+            if 'errorCode' in response and response['errorCode'] == 'SVC_NO_RESULT':
                 # print('Could not find a trip')
                 pass
-            elif response['errorCode'] == 'SVC_LOC_EQUAL': # start and dest are equal -> 0 time
+            elif 'errorCode' in response and response['errorCode'] == 'SVC_LOC_EQUAL': # start and dest are equal -> 0 time
                 trips.append((timedelta(seconds=0.0), ()),)
 
             for trip in response.get('Trip', []):

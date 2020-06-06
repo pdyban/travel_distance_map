@@ -9,5 +9,5 @@ class API:
     def get_closest_stop(self, gps_point):
         raise NotImplementedError()
 
-    def get_all_trips(self, gps_point_start, gps_point_end):
+    def get_all_trips(self, position_start, position_end):
         raise NotImplementedError()
