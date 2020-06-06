@@ -5,13 +5,13 @@ import json
 
 class Query(dict):
     def __init__(self, rootUrl, *args, **kwargs):
-        self.rootUrl = rootUrl
         dict.__init__(self, *args, **kwargs)
+        self['rootUrl'] = rootUrl
 
     def __str__(self):
         if not self.keys:
             return rootUrl
-        return '{}?'.format(self.rootUrl) + '&'.join('{}={}'.format(key, value) for (key, value) in self.items())
+        return '{}?'.format(self['rootUrl']) + '&'.join('{}={}'.format(key, value) for (key, value) in self.items())
 
     def to_json(self):
         return json.dumps(self)
