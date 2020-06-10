@@ -9,6 +9,23 @@ will use [VBB test ReST API](https://www.vbb.de/unsere-themen/vbbdigital/api-ent
 is visualized as a heatmap overlay with stops included in the computation shown
 as colored markers.*
 
+# About the library
+
+Different public transportation providers have varying interfaces to their data.
+Their is as of today no common interface specification in Europe, meaning that every new city data has to be connected manually by creating an API adapter.
+For more details, check the [api module](travel_distance_map/api).
+
+This library uses cache mechanism in order to reduce the computational load on
+the server as well as stay within the limit of the request count.
+Requests and the responses are stored in an SQLite database.
+Every time a response is sent to the server, it is compared against the cache.
+If exactly the same request is present in the cache,
+then the value is retrieved and the remote server is not contacted.
+This solution is more economical and allows for better scaling.
+Also, the cache database can easily be used for data analysis, e.g. with Pandas.
+For more details, consult the code documentation
+in [cache module](travel_distance_map/cache).
+
 # How to use
 This package can be used directly in your Python code.
 
@@ -45,7 +62,7 @@ This project is looking forward to your generous contributions. Here is how you 
   - **implement more APIs.**
   There are hundreds of APIs in Europe and the world. Unfortunately, there still is no central API standard for public transportation
   provider, which leaves us with the need to implement each city transport API
-  from scratch.
+  from scratch. Start by deriving your own `MyAPI` class from [API](travel_distance_map/api/api.py).
 
   - **report bugs and performance issues.**
   So far this has been a hobby project, so there must be millions of ways how to
