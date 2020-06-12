@@ -1,17 +1,17 @@
 import unittest
 import os
 from datetime import datetime
-from travel_distance_map import VBBAPICached, Query, SQLiteCache
+from travel_distance_map import VBBAPICached, APICached, Query, SQLiteCache
 from travel_distance_map import GPSPoint, Position
 
-TEST_DB_FILE_MOCK = 'travel_distance_map/test/test_vbbapicachedmock.sqlite'
+TEST_DB_FILE_MOCK = 'travel_distance_map/test/test_apicached.sqlite'
 TEST_DB_FILE = 'travel_distance_map/test/test_vbbapicached.sqlite'
 
 
-class TestVBBAPICachedMock(unittest.TestCase):
+class TestAPICached(unittest.TestCase):
     def setUp(self):
         cache = SQLiteCache(TEST_DB_FILE_MOCK)
-        self.api = VBBAPICached(access_id='', cache=cache)
+        self.api = APICached(cache=cache)
 
     def tearDown(self):
         os.remove(TEST_DB_FILE_MOCK)

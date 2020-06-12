@@ -2,7 +2,7 @@
 VBB API implementation.
 """
 
-from .api import API
+from .api import API, APICached
 from .query import Query
 from ..cache import SQLiteCache
 from ..primitives import APIError, Position
@@ -10,18 +10,12 @@ import requests
 import json
 from datetime import datetime, timedelta
 
-class VBBAPI(API):
+class VBBAPI:
     def __init__(self, access_id):
         API.__init__(self)
         self.ACCESS_ID = access_id
         self.base_url = "https://demo.hafas.de/openapi/vbb-proxy/"
-
-    def request(self, query):
-        response = requests.get(query)
-        js = json.loads(response.text)
-        if 'errorCode' in js and js['errorCode'] == 'API_QUOTA':
-            raise APIError(js['errorText'])
-        return js
+        self.api = API()
 
     def get_closest_stop(self, point):
         if isinstance(point, Position):
@@ -35,7 +29,7 @@ class VBBAPI(API):
         parameters['maxNo'] = 1
         parameters['r'] = 2000
         query = Query(endpoint, parameters)
-        response = self.request(query)
+        response = self.api.request(query)
 
         for key, result in response.items():
             if 'TechnicalMessage' in result:
@@ -74,7 +68,7 @@ class VBBAPI(API):
         query = Query(endpoint, parameters)
 
         try:
-            response = self.request(query)
+            response = self.api.request(query)
         except APIError as e:
             response = {}
 
@@ -164,13 +158,4 @@ class VBBAPICached(VBBAPI):
             self.cache = cache
         else:
             self.cache = SQLiteCache('cache.sqlite')
-
-    def request(self, query):
-        if query in self.cache:
-            js = self.cache[query]
-            # print(js)
-            return json.loads(js)
-
-        response = VBBAPI.request(self, query)
-        self.cache[query] = json.dumps(response)
-        return response
+        self.api = APICached(self.cache)
