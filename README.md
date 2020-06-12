@@ -50,6 +50,9 @@ trips = api.get_all_trips(origin, dest)
 
 Further examples can be found in [Jupyter Notebooks](travel_distance_map/notebooks).
 
+# Documentation
+Full API documentation can found [here](https://travel-distance-map.readthedocs.io/).
+
 # APIs
 
 Currently implemented are the following APIs:
