@@ -17,7 +17,7 @@ class TestAPICached(unittest.TestCase):
         os.remove(TEST_DB_FILE_MOCK)
 
     def test_request(self):
-        query = Query('https://postman-echo.com/get', {'foo1': 'bar1', 'foo2': 'bar2'})
+        query = Query('https://postman-echo.com/get', {'foo1': 'bar1', 'foo2': 'bar2', 'limit': 2})
         self.assertTrue(self.api.request(query))
 
     def test_can_create_cache(self):

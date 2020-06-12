@@ -22,8 +22,13 @@ class SQLiteCache(Cache):
             self.keys = set([item[1] for item in c.fetchall() if item[1] not in ('query', 'response')])
         self.conn.commit()
 
+    def escape_keys(self, keys):
+        ret = ['{}{}'.format(('','_')[key in ('limit',)], key) for key in keys]
+        return ret
+
     def __contains__(self, query):
-        if not set(query.keys()) <= self.keys:
+        query_keys = self.escape_keys(query.keys())
+        if not set(query_keys) <= self.keys:
             return False
         c = self.conn.cursor()
         c.execute('SELECT response FROM data WHERE query LIKE ?', [query.to_json(),])
@@ -31,18 +36,19 @@ class SQLiteCache(Cache):
         return res
 
     def __setitem__(self, query, response):
-        if not set(query.keys()) <= self.keys:
+        query_keys = self.escape_keys(query.keys())
+        if not set(query_keys) <= self.keys:
             # append new columns
             c = self.conn.cursor()
-            for key in set(query.keys()) - self.keys:
-                c.execute('ALTER TABLE data ADD {}'.format(key))
+            for key in set(query_keys) - self.keys:
+                c.execute('ALTER TABLE data ADD COLUMN \'{}\' TEXT'.format(key))
                 self.keys.add(key)
             self.conn.commit()
         elif query in self:
             raise KeyError("Cannot overwrite existing keys")
         c = self.conn.cursor()
         # c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(list(query.keys()) + ['query', 'response']), ','.join(['\"{}\"'.format(query[key]) for key in query.keys()] + ['\"{}\"'.format(str(query)), '\"{}\"'.format(response)])))
-        keys = list(query.keys()) + ['query', 'response']
+        keys = list(query_keys) + ['query', 'response']
         values = [query[key] for key in query.keys()] + [query.to_json(), response]
         c.execute('INSERT INTO data({}) VALUES ({})'.format(','.join(keys), ','.join('?' for i in range(len(query) + 2))), values)
         self.conn.commit()
