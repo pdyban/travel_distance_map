@@ -3,6 +3,8 @@ API interface.
 """
 import requests
 import json
+from ..cache import SQLiteCache
+from ..primitives import APIError
 
 class API:
     def request(self, query):

@@ -20,6 +20,9 @@ class TestAPICached(unittest.TestCase):
         query = Query('https://postman-echo.com/get', {'foo1': 'bar1', 'foo2': 'bar2'})
         self.assertTrue(self.api.request(query))
 
+    def test_can_create_cache(self):
+        self.api = APICached()
+
 
 if not os.path.exists('ACCESS_ID.txt'):
     from warnings import warn
