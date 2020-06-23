@@ -5,7 +5,7 @@ VBB API implementation.
 from .api import API, APICached
 from .query import Query
 from ..cache import SQLiteCache
-from ..primitives import APIError, Position
+from ..primitives import APIError, Position, Trip
 import requests
 import json
 from datetime import datetime, timedelta
@@ -86,8 +86,8 @@ class VBBAPI:
                 trips.append((timedelta(seconds=0.0), ()),)
 
             for trip in response.get('Trip', []):
+                # print(trip)
                 leglist = trip['LegList']
-
                 for key in leglist:
                     travel_time = timedelta()
                     legs = []
@@ -103,7 +103,12 @@ class VBBAPI:
                         travel_time += td
                         legs.append(leg_dest['name'])
                     # print('TOTAL TRAVEL TIME: {}'.format(travel_time))
-                    trips.append((travel_time, legs))
+                    t = Trip()
+                    t.travel_time = travel_time
+                    t.legs = legs
+                    t.transferCount = trip.get('transferCount', 0)
+                    t.frequency = trip['Freq']['waitMinimum']
+                    trips.append(t)
         except KeyError as e:
             print('Error:', e)
 

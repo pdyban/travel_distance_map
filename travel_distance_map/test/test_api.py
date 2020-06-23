@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from travel_distance_map import VBBAPICached, APICached, Query, SQLiteCache
 from travel_distance_map import GPSPoint, Position
+from travel_distance_map import Trip
 
 TEST_DB_FILE_MOCK = 'travel_distance_map/test/test_apicached.sqlite'
 TEST_DB_FILE = 'travel_distance_map/test/test_vbbapicached.sqlite'
@@ -65,6 +66,7 @@ else:
             result = self.api.get_all_trips(start, end)
             self.assertIsNotNone(result)
             self.assertIsInstance(result, list)
+            self.assertIsInstance(result[0], Trip)
 
         def test_get_all_trips_fixed_datetime(self):
             start = Position(52.5219216, 13.411026, 900100003, 'Alexanderplatz')  # Alexanderplatz

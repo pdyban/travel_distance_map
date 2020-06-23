@@ -52,3 +52,11 @@ class Position:
 
     def __repr__(self):
         return self.__str__()
+
+
+class Trip:
+    def __init__(self):
+        self.travel_time = None
+        self.legs = []
+        self.transferCount = 0
+        self.frequency = 0
